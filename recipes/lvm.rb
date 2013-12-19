@@ -3,6 +3,12 @@ vol_grp = node["openstack"]["block-storage"]["volume"]["volume_group"]
 stat_dir = node["openstack"]["block-storage"]["volume"]["state_path"]
 local_file = File.join(stat_dir, vol_grp)
 
+node["openstack"]["block-storage"]["volume"]["lvm_packages"].each do |pkg|
+  package pkg do
+    action :upgrade
+  end
+end
+
 # FIXME: We should get the size of device that will end up containing local_file.
 size = ((`df -Pk /`.split("\n")[1].split(" ")[3].to_i * 1024) * 0.90).to_i
 
